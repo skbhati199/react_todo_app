@@ -1,0 +1,52 @@
+service cloud.firestore {  
+  match /databases/{database}/documents {
+    // Anyone can read a restaurant, only authorized
+    // users can create, update, or delete them.
+  	 match /restaurants/{restaurantId} {
+    	 allow read: if true;
+    	 allow create, update, delete: if request.auth.uid != null;
+    }
+    
+    // Anyone can read a rating. Only the user who made the rating
+    // can delete it. Ratings can never be updated.
+    match /restaurants/{restaurantId}/ratings/{ratingId} {
+    	 allow read: if true;
+      allow create: if request.auth.uid != null;
+    	 allow delete: if request.resource.data.userId == request.auth.uid;
+    	 allow update: if false;
+    }
+    match /posts/{database} {
+    	 allow read,write:  if true;
+    }
+    
+     match /users/{uid} {
+    	 allow read, create: if true;
+    	 allow update, delete: if request.auth.uid != null;
+    }
+    
+     match /orders/{database} {
+    	 allow read, create: if true;
+    	 allow update, delete: if request.auth.uid != null;
+    }
+    
+    match /services/{database} {
+     allow read, create: if true;
+    	 allow update, delete: if request.auth.uid != null;
+    }
+    
+    match /categories/{database} {
+     allow read, create: if true;
+    	 allow update, delete: if request.auth.uid != null;
+    }
+    
+     match /subcategory/{database} {
+     allow read, create: if true;
+    	 allow update, delete: if request.auth.uid != null;
+    }
+    
+     match /menu/{database} {
+     allow read, create: if true;
+    	 allow update, delete: if request.auth.uid != null;
+    }
+  }
+}
